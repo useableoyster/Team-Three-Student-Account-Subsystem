@@ -103,6 +103,8 @@ def health():
 
 @app.route("/api/student/<int:student_id>", methods=["GET", "OPTIONS"])
 def get_student(student_id):
+    if request.method == "OPTIONS":
+        return ("", 204)
     if student_id < 1:
         return jsonify({"error": "Student ID must be a positive number"}), 400
 
