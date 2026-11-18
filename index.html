@@ -1,18 +1,21 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Account Subsystem Muriya was here</title>
+    <title>Student Account Subsystem</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Student Account Subsystem ben too Muriya was here</h1>
-    <p>Welcome to the student account management portal.</p>
+    <h1>Student Account Subsystem</h1>
 
-    <button onclick="alert('Website is working!')">
-        View Student Accounts
+    <input type="number" id="studentId"
+           placeholder="Enter Student ID">
+
+    <button onclick="searchStudent()">
+        Search Student
     </button>
+
+    <div id="result"></div>
 
     <script src="script.js"></script>
 </body>
