@@ -33,6 +33,39 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.get_json()["error"], "Student not found")
 
+    def test_student_returns_relationship_records(self):
+        connection = Mock()
+        cursor = Mock()
+        cursor.fetchone.return_value = {
+            "STU_ID": 1001,
+            "STU_FNAME": "Jordan",
+            "STU_LNAME": "Willams",
+        }
+        charge = {
+            "CHARGE_ID": 501,
+            "STU_ID": 1001,
+            "HOUSE_ID": 101,
+            "MEALPLAN_ID": 201,
+            "TUTION_ID": 301,
+            "AID_ID": 401,
+        }
+        cursor.fetchall.side_effect = [
+            [charge],
+            [{"PAYMENT_ID": 601, "STU_ID": 1001}],
+            [{"HOUSE_ID": 101}],
+            [{"MEALPLAN_ID": 201}],
+            [{"TUTION_ID": 301}],
+            [{"AID_ID": 401}],
+        ]
+        connection.cursor.return_value = cursor
+
+        with patch("app.connect", return_value=connection):
+            response = self.client.get("/api/student/1001")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json()["records"]["CHARGES"], [charge])
+        self.assertEqual(response.get_json()["records"]["Housing"], [{"HOUSE_ID": 101}])
+
     def test_database_error_returns_500(self):
         with patch("app.connect", side_effect=Error()):
             response = self.client.get("/api/student/1001")

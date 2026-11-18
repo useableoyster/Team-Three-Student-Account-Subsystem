@@ -24,51 +24,15 @@ def connect():
     return mysql.connector.connect(**database_config())
 
 
-def student_foreign_key(cursor, table_name):
-    cursor.execute(
-        """
-        SELECT COLUMN_NAME
-        FROM information_schema.KEY_COLUMN_USAGE
-        WHERE TABLE_SCHEMA = %s
-          AND TABLE_NAME = %s
-          AND REFERENCED_TABLE_NAME = 'Student'
-        LIMIT 1
-        """,
-        (database_config()["database"], table_name),
-    )
-    row = cursor.fetchone()
-    if row:
-        return row["COLUMN_NAME"]
-
-    for candidate in ("STU_ID", "STUDENT_ID", "Student_ID"):
-        cursor.execute(
-            """
-            SELECT 1
-            FROM information_schema.COLUMNS
-            WHERE TABLE_SCHEMA = %s
-              AND TABLE_NAME = %s
-              AND COLUMN_NAME = %s
-            LIMIT 1
-            """,
-            (database_config()["database"], table_name, candidate),
-        )
-        if cursor.fetchone():
-            return candidate
-    return None
-
-
-def table_records(cursor, table_name, student_id):
-    try:
-        key = student_foreign_key(cursor, table_name)
-        if not key:
-            return []
-        cursor.execute(
-            f"SELECT * FROM `{table_name}` WHERE `{key}` = %s",
-            (student_id,),
-        )
-        return cursor.fetchall()
-    except Error:
+def related_records(cursor, table_name, key_column, ids):
+    if not ids:
         return []
+    placeholders = ", ".join(["%s"] * len(ids))
+    cursor.execute(
+        f"SELECT * FROM `{table_name}` WHERE `{key_column}` IN ({placeholders})",
+        tuple(ids),
+    )
+    return cursor.fetchall()
 
 
 @app.after_request
@@ -122,16 +86,30 @@ def get_student(student_id):
             connection.close()
             return jsonify({"error": "Student not found"}), 404
 
-        related = {}
-        for table_name in (
-            "Housing",
-            "Meal_Plan",
-            "TUTION_AND_FEES",
-            "Financial_Aid",
-            "CHARGES",
-            "Payments",
-        ):
-            related[table_name] = table_records(cursor, table_name, student_id)
+        cursor.execute("SELECT * FROM `CHARGES` WHERE `STU_ID` = %s", (student_id,))
+        charges = cursor.fetchall()
+        cursor.execute("SELECT * FROM `Payments` WHERE `STU_ID` = %s", (student_id,))
+        payments = cursor.fetchall()
+
+        related = {
+            "CHARGES": charges,
+            "Payments": payments,
+            "Housing": related_records(
+                cursor, "Housing", "HOUSE_ID", [row["HOUSE_ID"] for row in charges]
+            ),
+            "Meal_Plan": related_records(
+                cursor, "Meal_Plan", "MEALPLAN_ID",
+                [row["MEALPLAN_ID"] for row in charges],
+            ),
+            "TUTION_AND_FEES": related_records(
+                cursor, "TUTION_AND_FEES", "TUTION_ID",
+                [row["TUTION_ID"] for row in charges],
+            ),
+            "Financial_Aid": related_records(
+                cursor, "Financial_Aid", "AID_ID",
+                [row["AID_ID"] for row in charges],
+            ),
+        }
 
         cursor.close()
         connection.close()

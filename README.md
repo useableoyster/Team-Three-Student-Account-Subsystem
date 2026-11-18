@@ -5,9 +5,9 @@ in the repository root are the GitHub Pages frontend.
 
 ## Database status
 
-`database/schema.sql` is currently empty. It does not contain the team's original seven
-table definitions or sample records. The application cannot create or recover the missing
-schema automatically. Do not invent replacement tables or use SQLite.
+`database/schema.sql` contains the team's seven original tables and sample records for
+students 1001–1008. It preserves the supplied table and column names, including the
+`CHARGES` foreign-key relationships. Do not use SQLite.
 
 When the original `schema.sql` is available, initialize a Railway MySQL database by using
 the Railway MySQL console or a SQL client:
