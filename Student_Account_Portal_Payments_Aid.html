@@ -1,0 +1,1088 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Account Portal</title>
+<meta name="api-base" content="https://team-three-student-account-subsystem-production.up.railway.app">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    color: #26364a;
+}
+
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+
+/* LOGIN */
+#loginPage {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.login-card {
+    background: white;
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px #00000012;
+}
+
+.logo {
+    width: 45px;
+    height: 45px;
+    background: #17365d;
+    color: white;
+    border-radius: 9px;
+    display: grid;
+    place-items: center;
+    font-size: 23px;
+    margin-bottom: 20px;
+}
+
+.login-card h1 { color: #17365d; font-size: 25px; margin-bottom: 8px; }
+.login-card p { color: #718096; font-size: 14px; margin-bottom: 25px; }
+.login-card label, .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d9e0e8;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    background: white;
+}
+
+.primary-btn {
+    background: #17365d;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 6px;
+}
+
+.primary-btn:hover { background: #315d91; }
+.full-btn { width: 100%; }
+
+.demo-note {
+    margin-top: 18px;
+    font-size: 12px;
+    color: #8491a2;
+    text-align: center;
+}
+
+/* WEBSITE LAYOUT */
+#appPage { display: none; min-height: 100vh; }
+.layout { display: flex; min-height: 100vh; }
+
+.sidebar {
+    width: 235px;
+    background: #17365d;
+    color: white;
+    padding: 25px 15px;
+    flex-shrink: 0;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 0 10px 35px;
+}
+
+.brand-icon {
+    background: white;
+    color: #17365d;
+    border-radius: 7px;
+    width: 35px;
+    height: 35px;
+    display: grid;
+    place-items: center;
+}
+
+.nav-label {
+    color: #aebed2;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0 10px;
+    margin-bottom: 12px;
+}
+
+.nav-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    border: none;
+    color: #dce6f2;
+    background: transparent;
+    padding: 12px 13px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.nav-btn:hover, .nav-btn.active {
+    background: #315780;
+    color: white;
+}
+
+.logout {
+    margin-top: 25px;
+    border-top: 1px solid #3d5878;
+    padding-top: 15px;
+}
+
+.main { flex: 1; min-width: 0; }
+
+.topbar {
+    height: 70px;
+    background: white;
+    border-bottom: 1px solid #e5eaf0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 35px;
+}
+
+.topbar span { color: #718096; font-size: 14px; }
+.student-name { color: #17365d !important; font-weight: bold; }
+
+.content {
+    padding: 35px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.page { display: none; }
+.page.active { display: block; }
+
+.page-heading { margin-bottom: 25px; }
+.page-heading h1 { font-size: 26px; color: #17365d; margin-bottom: 7px; }
+.page-heading p { color: #718096; font-size: 14px; }
+
+.balance-card {
+    background: #17365d;
+    color: white;
+    padding: 27px;
+    border-radius: 10px;
+    margin-bottom: 22px;
+}
+
+.balance-card p { color: #d4dfec; font-size: 14px; }
+.balance-card h2 { font-size: 32px; margin: 12px 0; }
+.balance-card small { color: #d4dfec; }
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat-card, .section-card {
+    background: white;
+    border: 1px solid #e5eaf0;
+    border-radius: 9px;
+    padding: 22px;
+}
+
+.stat-card p { color: #718096; font-size: 13px; margin-bottom: 10px; }
+.stat-card h3 { color: #17365d; font-size: 23px; }
+
+.section-card { margin-bottom: 20px; }
+.section-card h3 { color: #17365d; margin-bottom: 18px; font-size: 17px; }
+
+.quick-links, .option-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.quick-link, .option-card {
+    border: 1px solid #e5eaf0;
+    background: #fafbfd;
+    border-radius: 8px;
+    padding: 18px;
+    text-align: left;
+    color: #17365d;
+}
+
+.quick-link:hover, .option-card:hover {
+    border-color: #315d91;
+    background: #f0f4f9;
+}
+
+.quick-link strong, .option-card strong {
+    display: block;
+    margin-bottom: 7px;
+}
+
+.quick-link span, .option-card span {
+    color: #718096;
+    font-size: 12px;
+}
+
+table { width: 100%; border-collapse: collapse; }
+
+th, td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #edf0f4;
+    text-align: left;
+    font-size: 14px;
+}
+
+th {
+    color: #718096;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 14px 0;
+    border-bottom: 1px solid #edf0f4;
+    font-size: 14px;
+}
+
+.info-row:last-child { border-bottom: none; }
+.muted { color: #718096; }
+
+.status {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 12px;
+    background: #e8f5ed;
+    color: #287443;
+}
+
+.pending { background: #fff3d9; color: #946515; }
+.failed { background: #fdeaea; color: #b33c3c; }
+
+.notice {
+    background: #f0f4f9;
+    border-radius: 7px;
+    padding: 13px;
+    color: #52657b;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 18px;
+}
+
+.choice-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 15px 0;
+}
+
+.choice-btn {
+    border: 1px solid #d9e0e8;
+    background: white;
+    color: #26364a;
+    padding: 11px 25px;
+    border-radius: 6px;
+}
+
+.choice-btn.selected {
+    background: #17365d;
+    color: white;
+    border-color: #17365d;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.form-grid .field { min-width: 0; }
+.field.full { grid-column: 1 / -1; }
+
+.total-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 13px 0;
+    border-bottom: 1px solid #edf0f4;
+}
+
+.empty {
+    padding: 30px;
+    text-align: center;
+    color: #718096;
+    background: #fafbfd;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.footer {
+    text-align: center;
+    color: #9aa5b3;
+    font-size: 12px;
+    padding: 25px;
+}
+
+
+.payment-form { display:grid; gap:14px; max-width:650px; }
+.payment-form label { display:block; font-size:13px; font-weight:bold; margin-bottom:7px; }
+.payment-form input, .payment-form select { margin-bottom:0; }
+.payment-actions { display:flex; gap:10px; flex-wrap:wrap; }
+.secondary-btn { background:#fff; color:#17365d; border:1px solid #cbd5e1; padding:11px 17px; border-radius:6px; }
+.aid-decision { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.aid-btn { border:1px solid #cbd5e1; border-radius:6px; padding:8px 12px; background:#fff; color:#17365d; }
+.aid-btn.accept { background:#e8f5ed; border-color:#9ac9a9; color:#21643a; }
+.aid-btn.decline { background:#fff0f0; border-color:#e7b2b2; color:#9b3030; }
+.aid-btn:disabled, button:disabled { opacity:.55; cursor:not-allowed; }
+
+@media(max-width: 750px) {
+    .layout { flex-direction: column; }
+    .sidebar { width: 100%; padding: 15px; }
+    .brand { padding-bottom: 15px; }
+    .nav-label { display: none; }
+    .nav-menu { display: flex; flex-wrap: wrap; gap: 5px; }
+    .nav-btn { width: auto; margin: 0; padding: 9px; font-size: 12px; }
+    .logout { margin-top: 10px; padding-top: 10px; }
+    .topbar { padding: 0 18px; }
+    .content { padding: 20px; }
+    .quick-links, .option-grid { grid-template-columns: 1fr 1fr; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .section-card { overflow-x: auto; }
+}
+
+@media(max-width: 450px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .field.full { grid-column: auto; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage">
+    <div class="login-card">
+        <div class="logo">S</div>
+        <h1>Student Account Portal</h1>
+        <p>Enter your Student ID to retrieve your account information.</p>
+
+        <form id="loginForm">
+            <label for="studentID">Student ID</label>
+            <input id="studentID" type="number" min="1" step="1" placeholder="Enter your student ID" required>
+
+            <button class="primary-btn full-btn" type="submit">View Account</button>
+            <p id="loginMessage" role="alert" style="color:#b33c3c;font-size:13px;margin:12px 0 0;"></p>
+        </form>
+
+        <div class="demo-note">Student ID lookup only · Password authentication is not provided by this API</div>
+    </div>
+</div>
+
+<!-- MAIN WEBSITE -->
+<div id="appPage">
+<div class="layout">
+
+<aside class="sidebar">
+    <div class="brand">
+        <div class="brand-icon">S</div>
+        Student Portal
+    </div>
+
+    <div class="nav-label">Main Menu</div>
+
+    <nav class="nav-menu">
+        <button class="nav-btn active" data-page="dashboard">⌂ &nbsp; Dashboard</button>
+        <button class="nav-btn" data-page="tuition">▤ &nbsp; Tuition & Fees</button>
+        <button class="nav-btn" data-page="housing">⌂ &nbsp; Housing & Meals</button>
+        <button class="nav-btn" data-page="payments">▣ &nbsp; Payments</button>
+        <button class="nav-btn" data-page="aid">◆ &nbsp; Financial Aid</button>
+        <button class="nav-btn" data-page="bills">▧ &nbsp; My Bills</button>
+        <button class="nav-btn" data-page="status">◉ &nbsp; Account Status</button>
+        <button class="nav-btn" data-page="other">＋ &nbsp; Other Fees</button>
+    </nav>
+
+    <div class="logout">
+        <button class="nav-btn" id="logoutBtn">↪ &nbsp; Sign Out</button>
+    </div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+    <span>Student Account Services</span>
+    <span class="student-name" id="headerName">Student Account</span>
+</header>
+
+<div class="content">
+
+<!-- DASHBOARD -->
+<section class="page active" id="dashboard">
+    <div class="page-heading">
+        <h1 id="welcomeTitle">Welcome to your account</h1>
+        <p>Here's an overview of your student account.</p>
+    </div>
+
+    <div class="balance-card">
+        <p>Estimated Account Balance</p>
+        <h2 id="dashboardBalance">—</h2>
+        <small id="dashboardBalanceNote">Balance is calculated from records returned by the database.</small>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <p>Total Estimated Charges</p>
+            <h3 id="dashboardCharges">—</h3>
+        </div>
+        <div class="stat-card">
+            <p>Completed Payments</p>
+            <h3 id="dashboardPayments">—</h3>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <h3>Quick Access</h3>
+        <div class="quick-links">
+            <button class="quick-link" data-go="tuition">
+                <strong>Tuition & Fees</strong>
+                <span>View tuition charges</span>
+            </button>
+            <button class="quick-link" data-go="housing">
+                <strong>Housing & Meals</strong>
+                <span>View selected options</span>
+            </button>
+            <button class="quick-link" data-go="payments">
+                <strong>Make a Payment</strong>
+                <span>Pay your outstanding balance</span>
+            </button>
+            <button class="quick-link" data-go="aid">
+                <strong>Financial Aid</strong>
+                <span>Review aid records</span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- TUITION AND FEES -->
+<section class="page" id="tuition">
+    <div class="page-heading">
+        <h1>Tuition & Fees</h1>
+        <p>Review tuition and additional university fees.</p>
+    </div>
+
+    <div class="section-card">
+        <h3>Tuition and Fee Breakdown</h3>
+        <table>
+            <thead><tr><th>Description</th><th>Amount</th></tr></thead>
+<tbody id="tuitionRows"><tr><td colspan="2">Sign in to load records.</td></tr></tbody>
+        </table>
+        <div class="info-row">
+            <strong>Total Tuition & Fees</strong>
+            <strong id="tuitionTotal">—</strong>
+        </div>
+    </div>
+</section>
+
+<!-- HOUSING AND MEAL PLANS -->
+<section class="page" id="housing">
+    <div class="page-heading">
+        <h1>Housing & Meal Plans</h1>
+        <p>Review your selected housing and meal plan.</p>
+    </div>
+
+    <div class="section-card">
+        <h3>Housing Information</h3>
+        <div class="info-row">
+            <span class="muted">Residence Hall</span>
+            <strong><span id="housingName">—</span></strong>
+        </div>
+        <div class="info-row">
+            <span class="muted">Room Type</span>
+            <strong><span id="housingRoom">—</span></strong>
+        </div>
+        <div class="info-row">
+            <span class="muted">Academic Year</span>
+            <strong><span id="housingYear">—</span></strong>
+        </div>
+        <div class="info-row">
+            <span class="muted">Housing Cost</span>
+            <strong><span id="housingCost">—</span></strong>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <h3>Meal Plan Information</h3>
+        <div class="info-row">
+            <span class="muted">Selected Plan</span>
+            <strong><span id="mealPlanName">—</span></strong>
+        </div>
+        <div class="info-row">
+            <span class="muted">Meal Swipes</span>
+            <strong><span id="mealSwipes">—</span></strong>
+        </div>
+        <div class="info-row">
+            <span class="muted">Bison Bucks</span>
+            <strong><span id="mealBucks">—</span></strong>
+        </div>
+        <div class="info-row">
+            <span class="muted">Meal Plan Cost</span>
+            <strong><span id="mealCost">—</span></strong>
+        </div>
+    </div>
+</section>
+
+<!-- PAYMENTS -->
+<section class="page" id="payments">
+    <div class="page-heading">
+        <h1>Payments</h1>
+        <p>Pay your outstanding student account balance and review payment history.</p>
+    </div>
+
+    <div class="section-card">
+        <h3>Payment Summary</h3>
+        <div class="info-row">
+            <span class="muted">Current Estimated Balance</span>
+            <strong id="paymentBalance">—</strong>
+        </div>
+        <div class="info-row">
+            <span class="muted">Completed Payments</span>
+            <strong id="paymentTotal">—</strong>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <h3>Make a Payment</h3>
+        <div class="notice">Choose an amount and continue to the secure payment page. This demonstration uses Stripe test mode; no real money should be charged.</div>
+        <form id="paymentForm" class="payment-form">
+            <div class="field">
+                <label for="paymentAmount">Payment amount (USD)</label>
+                <input id="paymentAmount" type="number" min="0.50" step="0.01" placeholder="Enter amount" required>
+            </div>
+            <div class="field">
+                <label for="paymentMethod">Payment method</label>
+                <select id="paymentMethod" required>
+                    <option value="card">Credit or debit card</option>
+                </select>
+            </div>
+            <div class="payment-actions">
+                <button class="primary-btn" id="payBalanceBtn" type="button">Pay Full Balance</button>
+                <button class="primary-btn" id="submitPaymentBtn" type="submit">Continue to Secure Payment</button>
+            </div>
+            <p id="paymentMessage" role="status" class="muted"></p>
+        </form>
+    </div>
+
+    <div class="section-card">
+        <h3>Payment History</h3>
+        <table>
+            <thead><tr><th>Payment</th><th>Amount</th><th>Status</th></tr></thead>
+<tbody id="paymentHistory"><tr><td colspan="3">Sign in to load records.</td></tr></tbody>
+        </table>
+    </div>
+</section>
+
+<!-- FINANCIAL AID -->
+<section class="page" id="aid">
+    <div class="page-heading">
+        <h1>Financial Aid</h1>
+        <p>Review financial-aid records linked to your account.</p>
+    </div>
+
+    <div class="section-card">
+        <h3>Your Financial Aid</h3>
+        <div id="aidRecords" class="empty">Financial-aid records will appear after lookup.</div>
+        <div class="notice" style="margin-top:18px;">
+            Review each award and select Accept or Decline. Your decision will be saved to your student account.
+        </div>
+        <p id="aidMessage" role="status" class="muted"></p>
+    </div>
+
+    <div class="section-card">
+        <h3>Estimated Balance</h3>
+        <div class="info-row">
+            <span class="muted">Balance Before Aid</span>
+            <strong id="aidBefore">—</strong>
+        </div>
+        <div class="info-row">
+            <span class="muted">Accepted Aid Estimate</span>
+            <strong id="aidCredit">Not applied</strong>
+        </div>
+        <div class="info-row">
+            <strong>Estimated Balance After Aid</strong>
+            <strong id="aidBalance">—</strong>
+        </div>
+    </div>
+</section>
+
+<!-- MY BILLS -->
+<section class="page" id="bills">
+    <div class="page-heading">
+        <h1>My Bills</h1>
+        <p>Review your estimated student account charges.</p>
+    </div>
+
+    <div class="section-card">
+        <h3>Account Billing Summary</h3>
+        <div class="info-row"><span class="muted">Tuition & Fees</span><strong id="billTuition">—</strong></div>
+        <div class="info-row"><span class="muted">Housing</span><strong id="billHousing">—</strong></div>
+        <div class="info-row"><span class="muted">Meal Plan</span><strong id="billMeal">—</strong></div>
+        <div class="info-row"><strong>Total Estimated Charges</strong><strong id="billCharges">—</strong></div>
+        <div class="info-row"><span class="muted">Completed Payments</span><strong id="billPayments">—</strong></div>
+        <div class="info-row"><span class="muted">Accepted Aid Estimate</span><strong id="billAid">—</strong></div>
+        <div class="info-row"><strong>Estimated Remaining Balance</strong><strong id="billBalance">—</strong></div>
+    </div>
+    <div class="notice">
+        This summary is calculated from the linked records returned by the API. The current API does not return a full itemized fee schedule or billing due dates.
+    </div>
+</section>
+
+<!-- ACCOUNT STATUS -->
+<section class="page" id="status">
+    <div class="page-heading">
+        <h1>Account Status</h1>
+        <p>View your student and account information.</p>
+    </div>
+
+    <div class="section-card">
+        <h3>Student Information</h3>
+        <div class="info-row"><span class="muted">Student Name</span><strong id="statusName">—</strong></div>
+        <div class="info-row"><span class="muted">Student ID</span><strong id="statusID">—</strong></div>
+        <div class="info-row"><span class="muted">Major</span><strong id="statusMajor">—</strong></div>
+        <div class="info-row"><span class="muted">Classification</span><strong id="statusClass">—</strong></div>
+        <div class="info-row"><span class="muted">Enrollment</span><span class="status" id="statusEnrollment">—</span></div>
+    </div>
+
+    <div class="section-card">
+        <h3>Account Overview</h3>
+        <div class="info-row"><span class="muted">Estimated Charges</span><strong id="statusCharges">—</strong></div>
+        <div class="info-row"><span class="muted">Completed Payments</span><strong id="statusPayments">—</strong></div>
+        <div class="info-row"><span class="muted">Estimated Balance</span><strong id="statusBalance">—</strong></div>
+    </div>
+</section>
+
+<!-- OTHER FEES -->
+<section class="page" id="other">
+    <div class="page-heading">
+        <h1>Other Fees</h1>
+        <p>Review additional charges outside of the main account categories.</p>
+    </div>
+
+    <div class="section-card">
+        <h3>Additional Charges</h3>
+        <div class="empty">
+            No separate miscellaneous charges are listed for this student
+            in the current SQL sample.
+        </div>
+    </div>
+</section>
+
+</div>
+
+<div class="footer">Student Account Portal · Demonstration Website</div>
+</main>
+</div>
+</div>
+
+<script>
+const API_BASE = document.querySelector('meta[name="api-base"]').content.replace(/\/$/, "");
+let currentAccount = null;
+
+const money = value => Number(value || 0).toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD"
+});
+
+const numberValue = value => {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : 0;
+};
+
+const get = (object, ...keys) => {
+    for (const key of keys) {
+        if (object && object[key] !== undefined && object[key] !== null) return object[key];
+    }
+    return undefined;
+};
+
+function setText(id, value) {
+    const element = document.getElementById(id);
+    if (element) element.textContent = value ?? "—";
+}
+
+function statusBadge(value) {
+    const span = document.createElement("span");
+    const status = String(value || "Unknown");
+    span.className = "status";
+    if (/pending|approved/i.test(status)) span.classList.add("pending");
+    if (/failed|rejected|declined/i.test(status)) span.classList.add("failed");
+    span.textContent = status;
+    return span;
+}
+
+function appendCell(row, value) {
+    const cell = document.createElement("td");
+    cell.textContent = value ?? "—";
+    row.appendChild(cell);
+    return cell;
+}
+
+function renderRows(targetId, rows, columns, emptyMessage, statusColumn = null) {
+    const tbody = document.getElementById(targetId);
+    if (!tbody) return;
+    tbody.replaceChildren();
+
+    if (!rows.length) {
+        const row = document.createElement("tr");
+        const cell = appendCell(row, emptyMessage);
+        cell.colSpan = columns.length;
+        tbody.appendChild(row);
+        return;
+    }
+
+    rows.forEach(item => {
+        const row = document.createElement("tr");
+        columns.forEach(column => {
+            if (column.key === statusColumn) {
+                const cell = document.createElement("td");
+                cell.appendChild(statusBadge(item[column.key]));
+                row.appendChild(cell);
+            } else {
+                appendCell(row, column.format ? column.format(item[column.key]) : item[column.key]);
+            }
+        });
+        tbody.appendChild(row);
+    });
+}
+
+function renderAid(aidRows) {
+    const container = document.getElementById("aidRecords");
+    container.replaceChildren();
+
+    if (!aidRows.length) {
+        container.className = "empty";
+        container.textContent = "No financial-aid records are linked to this student.";
+        return;
+    }
+
+    container.className = "";
+    aidRows.forEach(aid => {
+        const aidId = get(aid, "AID_ID", "aid_id");
+        const aidName = get(aid, "AID_NAME", "aid_name") || "Financial Aid";
+        const aidAmount = numberValue(get(aid, "AID_AMOUNT", "aid_amount"));
+        const aidStatus = String(get(aid, "AID_STATUS", "aid_status") || "Pending");
+        const row = document.createElement("div");
+        row.className = "info-row";
+        row.style.alignItems = "center";
+        row.style.flexWrap = "wrap";
+
+        const details = document.createElement("div");
+        const name = document.createElement("strong");
+        name.textContent = aidName;
+        const amount = document.createElement("div");
+        amount.className = "muted";
+        amount.style.marginTop = "5px";
+        amount.textContent = money(aidAmount);
+        details.append(name, amount);
+
+        const controls = document.createElement("div");
+        controls.className = "aid-decision";
+        controls.appendChild(statusBadge(aidStatus));
+
+        if (/pending|offered|available/i.test(aidStatus)) {
+            ["Accepted", "Declined"].forEach(decision => {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = "aid-btn " + (decision === "Accepted" ? "accept" : "decline");
+                button.textContent = decision === "Accepted" ? "Accept" : "Decline";
+                button.addEventListener("click", () => submitAidDecision(aidId, decision, button));
+                controls.appendChild(button);
+            });
+        }
+        row.append(details, controls);
+        container.appendChild(row);
+    });
+}
+
+async function submitAidDecision(aidId, decision, button) {
+    if (!currentAccount || !aidId) {
+        setText("aidMessage", "Missing student or award information.");
+        return;
+    }
+    const message = document.getElementById("aidMessage");
+    const buttons = document.querySelectorAll(".aid-btn");
+    buttons.forEach(item => item.disabled = true);
+    message.textContent = "Saving your decision...";
+    try {
+        const response = await fetch(`${API_BASE}/api/financial-aid/${encodeURIComponent(aidId)}/decision`, {
+            method: "POST",
+            headers: {"Content-Type":"application/json", "Accept":"application/json"},
+            body: JSON.stringify({
+                studentId: get(currentAccount.student, "STU_ID", "stu_id"),
+                decision
+            })
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || "Unable to save financial-aid decision.");
+        const records = currentAccount.records || {};
+        const aidRows = records.Financial_Aid || records.FINANCIAL_AID || [];
+        const target = aidRows.find(item => String(get(item,"AID_ID","aid_id")) === String(aidId));
+        if (target) {
+            if ("AID_STATUS" in target) target.AID_STATUS = decision;
+            else target.aid_status = decision;
+        }
+        renderAid(aidRows);
+        message.textContent = `Your ${decision.toLowerCase()} decision was saved.`;
+    } catch (error) {
+        message.textContent = error.message || "Could not save your decision.";
+        buttons.forEach(item => item.disabled = false);
+    }
+}
+
+function renderAccount(payload) {
+    const student = payload.student || {};
+    const records = payload.records || {};
+    const charges = records.CHARGES || records.Charges || [];
+    const payments = records.Payments || records.PAYMENTS || [];
+    const housingRows = records.Housing || records.HOUSING || [];
+    const mealRows = records.Meal_Plan || records.MEAL_PLAN || [];
+    const tuitionRows = records.TUTION_AND_FEES || records.TUITION_AND_FEES || [];
+    const aidRows = records.Financial_Aid || records.FINANCIAL_AID || [];
+
+    const housing = housingRows[0] || {};
+    const meal = mealRows[0] || {};
+    const tuitionTotal = tuitionRows.reduce((sum, row) =>
+        sum + numberValue(get(row, "RATE_AMOUNT", "rate_amount")), 0
+    );
+    const housingTotal = housingRows.reduce((sum, row) =>
+        sum + numberValue(get(row, "HOUSING_RATE", "housing_rate")), 0
+    );
+    const mealTotal = mealRows.reduce((sum, row) =>
+        sum + numberValue(get(row, "PLAN_COST", "plan_cost")), 0
+    );
+    const totalCharges = charges.reduce((sum, row) =>
+        sum + numberValue(get(row, "CHARGE_AMOUNT", "charge_amount")), 0
+    ) + housingTotal + mealTotal;
+    const completedPayments = payments
+        .filter(row => String(get(row, "PAYMENT_STATUS", "payment_status") || "").toLowerCase() === "completed")
+        .reduce((sum, row) => sum + numberValue(get(row, "PAYMENT_AMOUNT", "payment_amount")), 0);
+    const disbursedAid = aidRows
+        .filter(row => String(get(row, "AID_STATUS", "aid_status") || "").toLowerCase() === "disbursed")
+        .reduce((sum, row) => sum + numberValue(get(row, "AID_AMOUNT", "aid_amount")), 0);
+    const balance = Math.max(0, totalCharges - completedPayments - disbursedAid);
+
+    const firstName = get(student, "STU_FNAME", "stu_fname") || "Student";
+    const lastName = get(student, "STU_LNAME", "stu_lname") || "";
+    const fullName = `${firstName} ${lastName}`.trim();
+
+    setText("headerName", fullName);
+    setText("welcomeTitle", firstName);
+    setText("statusName", fullName);
+    setText("statusID", get(student, "STU_ID", "stu_id"));
+    setText("statusMajor", get(student, "STU_MAJOR", "stu_major"));
+    setText("statusClass", get(student, "STU_CLASS", "stu_class"));
+    setText("statusEnrollment", String(get(student, "STU_ENROLL", "stu_enroll") || "Unknown").toLowerCase() === "true" ? "Active" : "Inactive");
+
+    setText("housingName", get(housing, "DORM_NAME", "dorm_name") || "No housing record");
+    setText("housingRoom", get(housing, "ROOM_TYPE", "room_type") || "—");
+    setText("housingYear", get(housing, "ACADEMIC_YEAR", "academic_year") || "—");
+    setText("housingCost", money(housingTotal));
+    setText("mealPlanName", get(meal, "PLAN_NAME", "plan_name") || "No meal plan record");
+    setText("mealSwipes", get(meal, "MEALPLAN_SWIPES", "mealplan_swipes") ?? "—");
+    setText("mealBucks", money(get(meal, "BISON_BUCKS", "bison_bucks")));
+    setText("mealCost", money(mealTotal));
+
+    const tuitionDisplayRows = tuitionRows.map(row => ({
+        name: get(row, "ITEM_NAME", "item_name") || "Tuition / Fee",
+        amount: numberValue(get(row, "RATE_AMOUNT", "rate_amount"))
+    }));
+    renderRows("tuitionRows", tuitionDisplayRows,
+        [{key:"name"}, {key:"amount", format:money}],
+        "No tuition or fee records are linked to this student.");
+    setText("tuitionTotal", money(tuitionTotal));
+
+    renderRows("paymentHistory", payments.map(row => ({
+        id: get(row, "PAYMENT_ID", "payment_id"),
+        amount: numberValue(get(row, "PAYMENT_AMOUNT", "payment_amount")),
+        status: get(row, "PAYMENT_STATUS", "payment_status")
+    })), [
+        {key:"id"}, {key:"amount", format:money}, {key:"status"}
+    ], "No payment records found.", "status");
+
+    renderAid(aidRows);
+
+    setText("dashboardBalance", money(balance));
+    setText("dashboardCharges", money(totalCharges));
+    setText("dashboardPayments", money(completedPayments));
+    setText("paymentBalance", money(balance));
+    setText("paymentTotal", money(completedPayments));
+    setText("billTuition", money(tuitionTotal));
+    setText("billHousing", money(housingTotal));
+    setText("billMeal", money(mealTotal));
+    setText("billCharges", money(totalCharges));
+    setText("billPayments", money(completedPayments));
+    setText("billAid", money(disbursedAid));
+    setText("billBalance", money(balance));
+    setText("statusCharges", money(totalCharges));
+    setText("statusPayments", money(completedPayments));
+    setText("statusBalance", money(balance));
+    setText("aidBefore", money(Math.max(0, totalCharges - completedPayments)));
+    setText("aidCredit", money(disbursedAid));
+    setText("aidBalance", money(balance));
+
+    currentAccount = payload;
+}
+
+async function startPayment(amount) {
+    const message = document.getElementById("paymentMessage");
+    const submitButton = document.getElementById("submitPaymentBtn");
+    const studentId = get(currentAccount && currentAccount.student, "STU_ID", "stu_id");
+    if (!studentId) {
+        message.textContent = "Please sign in again before making a payment.";
+        return;
+    }
+    if (!Number.isFinite(amount) || amount < 0.50) {
+        message.textContent = "Enter a payment amount of at least $0.50.";
+        return;
+    }
+    submitButton.disabled = true;
+    message.textContent = "Preparing secure checkout...";
+    try {
+        const response = await fetch(`${API_BASE}/api/payments/create-checkout-session`, {
+            method: "POST",
+            headers: {"Content-Type":"application/json", "Accept":"application/json"},
+            body: JSON.stringify({studentId, amount: Number(amount.toFixed(2)), paymentMethod:"card"})
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || "Unable to start payment.");
+        if (!result.checkoutUrl) throw new Error("The payment server did not return a checkout URL.");
+        window.location.assign(result.checkoutUrl);
+    } catch (error) {
+        message.textContent = error.message || "Payment could not be started.";
+        submitButton.disabled = false;
+    }
+}
+
+document.getElementById("paymentForm").addEventListener("submit", event => {
+    event.preventDefault();
+    startPayment(Number(document.getElementById("paymentAmount").value));
+});
+document.getElementById("payBalanceBtn").addEventListener("click", () => {
+    const balanceText = document.getElementById("paymentBalance").textContent;
+    const amount = Number(balanceText.replace(/[^0-9.-]/g, ""));
+    if (amount > 0) {
+        document.getElementById("paymentAmount").value = amount.toFixed(2);
+        startPayment(amount);
+    } else {
+        document.getElementById("paymentMessage").textContent = "There is no outstanding balance to pay.";
+    }
+});
+
+// Return from hosted checkout and refresh the account data.
+const checkoutParams = new URLSearchParams(window.location.search);
+if (checkoutParams.get("payment") === "success" || checkoutParams.get("payment") === "cancelled") {
+    window.addEventListener("load", () => {
+        const message = document.getElementById("paymentMessage");
+        if (message) message.textContent = checkoutParams.get("payment") === "success"
+            ? "Checkout completed. Your payment will appear after the server confirms it."
+            : "Payment was cancelled. No payment was completed.";
+        window.history.replaceState({}, document.title, window.location.pathname);
+    });
+}
+
+document.getElementById("loginForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const studentID = document.getElementById("studentID").value.trim();
+    const message = document.getElementById("loginMessage");
+    const submitButton = this.querySelector('button[type="submit"]');
+
+    if (!/^\d+$/.test(studentID) || Number(studentID) < 1) {
+        alert("Please enter a valid numeric Student ID.");
+        return;
+    }
+
+    if (message) message.textContent = "";
+    submitButton.disabled = true;
+    submitButton.textContent = "Loading...";
+    try {
+        const response = await fetch(`${API_BASE}/api/student/${encodeURIComponent(studentID)}`, {
+            method: "GET",
+            headers: { "Accept": "application/json" }
+        });
+        const payload = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+            throw new Error(payload.error || `Unable to retrieve student record (${response.status}).`);
+        }
+        if (!payload.student) {
+            throw new Error("The API response did not include a student record.");
+        }
+
+        renderAccount(payload);
+        document.getElementById("loginPage").style.display = "none";
+        document.getElementById("appPage").style.display = "block";
+        showPage("dashboard");
+    } catch (error) {
+        const detail = error && error.message ? error.message : String(error);
+        const isNetworkError = error instanceof TypeError;
+        const friendly = isNetworkError
+            ? "The API could not be reached from this page. If the API link works in a separate tab, this may be a browser CORS or hosting-origin issue. Try opening the website from its approved web host rather than directly as a local file."
+            : detail;
+        if (message) {
+            message.textContent = friendly;
+        } else {
+            alert(friendly);
+        }
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "View Account";
+    }
+});
+
+// Navigation
+function showPage(pageName) {
+    document.querySelectorAll(".page").forEach(page => page.classList.remove("active"));
+    document.querySelectorAll(".nav-btn[data-page]").forEach(button => button.classList.remove("active"));
+
+    const page = document.getElementById(pageName);
+    if (!page) return;
+    page.classList.add("active");
+
+    const button = document.querySelector(`.nav-btn[data-page="${pageName}"]`);
+    if (button) button.classList.add("active");
+}
+
+document.querySelectorAll(".nav-btn[data-page]").forEach(button => {
+    button.addEventListener("click", () => showPage(button.dataset.page));
+});
+document.querySelectorAll(".quick-link").forEach(button => {
+    button.addEventListener("click", () => showPage(button.dataset.go));
+});
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+    currentAccount = null;
+    document.getElementById("appPage").style.display = "none";
+    document.getElementById("loginPage").style.display = "flex";
+    document.getElementById("loginForm").reset();
+    showPage("dashboard");
+});
+</script>
+
+</body>
+</html>
