@@ -40,6 +40,10 @@ class AppTestCase(unittest.TestCase):
             "STU_ID": 1001,
             "STU_FNAME": "Jordan",
             "STU_LNAME": "Willams",
+            "STU_EMAIL": "jwilliams@email.com",
+            "STU_MAJOR": "Computer Science",
+            "STU_CLASS": "Sophomore",
+            "STU_ENROLL": "TRUE",
         }
         charge = {
             "CHARGE_ID": 501,

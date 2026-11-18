@@ -13,11 +13,15 @@ When the original `schema.sql` is available, initialize a Railway MySQL database
 the Railway MySQL console or a SQL client:
 
 1. Create or select the Railway MySQL database.
-2. Run `database/schema.sql` once.
-3. Verify that `Higher_education` and the seven original tables exist.
+2. Connect to the provisioned database with the Railway MySQL SQL console or a SQL client.
+3. Select the provisioned database name, using `MYSQLDATABASE` if needed:
+   `USE your_railway_database_name;`
+4. Run `database/schema.sql`.
+5. Verify that the seven original tables exist.
 
-Do not run the schema again against a deployed database unless you intend to reset or
-replace existing data.
+The file uses `CREATE TABLE IF NOT EXISTS` and `INSERT IGNORE`, so it does not drop
+databases or replace existing records. It is intended for first-time initialization and
+safe repeat runs.
 
 ## Railway backend
 
