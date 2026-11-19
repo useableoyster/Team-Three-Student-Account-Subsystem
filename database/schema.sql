@@ -2,6 +2,10 @@
 -- Run this file while connected to the provisioned Higher_education database.
 -- It is safe to rerun and does not drop or replace an existing database.
 
+
+-- Run this file while connected to the provisioned Higher_education database.
+-- It is safe to rerun and does not drop or replace an existing database.
+
 CREATE TABLE IF NOT EXISTS Student (
     STU_ID INTEGER NOT NULL,
     STU_FNAME VARCHAR(11) NOT NULL,
