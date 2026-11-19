@@ -114,10 +114,19 @@ def get_student(student_id):
         cursor.close()
         connection.close()
         return jsonify({"student": student, "records": related})
-    except Error:
+        except Error as e:
+        app.logger.exception(
+            "MySQL error while retrieving student ID %s",
+            student_id
+        )
+
         if connection:
             connection.close()
-        return jsonify({"error": "Database connection or query failed"}), 500
+
+        return jsonify({
+            "error": "Database connection or query failed",
+            "details": str(e)
+        }), 500
 
 
 if __name__ == "__main__":
